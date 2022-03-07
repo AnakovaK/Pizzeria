@@ -14,23 +14,43 @@
           </li>
           {% endfor %}
         </ul>
-        <ul class="navbar-nav d-flex">
+        <ul class="navbar-nav d-flex mb-md-0">
           <li class="nav-item">
+            <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions"
+                    aria-controls="offcanvasWithBothOptions" style="background-color: #f7b585;">
+              <img src='/media/icons/phone.png' alt="phone" style="max-width:45px;">
+            </button>
+          </li>
+          <li class="nav-item mt-2">
             {% if not user.is_authenticated %}
-              <a class="nav-link" href="{% url 'registration' %}">Зарегистрироваться</a>
+            <a class="nav-link" href="{% url 'registration' %}">Зарегистрироваться</a>
             {% endif %}
           </li>
-          <li class="nav-item">
-           {% if request.user.is_authenticated %}
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'profile' request.user.username%}">{{ request.user }}</a>
-              </li>
-              <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
-            {% else %}
-              <a class="nav-link" href="{% url 'login' %}">Войти</a>
-            {% endif %}
+          <li class="nav-item mt-2">
+            {% if request.user.is_authenticated %}
+          <li class="nav-item mt-2">
+            <a class="nav-link" href="{% url 'profile' request.user.username%}">{{ request.user }}</a>
+          </li>
+          <a class="nav-link mt-2" href="{% url 'logout' %}">Выйти</a>
+          {% else %}
+          <a class="nav-link mt-0" href="{% url 'login' %}">Войти</a>
+          {% endif %}
         </ul>
       </div>
     </div>
   </nav>
 </nav>
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions"
+     aria-labelledby="offcanvasWithBothOptionsLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Контакты</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <p>Принимаем звонки круглосуточно!</p>
+    <hr>
+    <p>+7(xxx)777-77-77</p>
+    <p>+7(xxx)777-77-77</p>
+    <p>Почта: abc@123.net</p>
+  </div>
+</div>
