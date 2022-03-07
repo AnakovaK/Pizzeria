@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-100">
+
+<head>
+  <meta charset="UTF-8">
+  <title>{{ pagename }}</title>
+  <link href="https://getbootstrap.com/docs/5.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+  <link href="https://getbootstrap.com/docs/5.1/examples/sticky-footer-navbar/sticky-footer-navbar.css"
+        rel="stylesheet">
+  {% block extra_css %} {% endblock %}
+</head>
+
+<body class="d-flex flex-column h-100">
+<header>
+  {% include 'base/menu.html' %}
+</header>
+
+<main class="flex-shrink-0">
+  <div class="container">
+    <div class="row mt-5">
+      <h1>{{ pagename }}</h1>
+      <hr>
+    </div>
+
+    {% block content %} {% endblock %}
+  </div>
+</main>
+
+<footer class="footer mt-auto py-3 bg-light">
+  {% block footer %}
+  <div class="container">
+    <span>AnakovaK, 2022</span>
+  </div>
+  {% endblock %}
+</footer>
+
+<script src="https://getbootstrap.com/docs/5.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+{% block extra_js %} {% endblock %}
+</body>
+</html>

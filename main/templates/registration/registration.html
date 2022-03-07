@@ -1,0 +1,18 @@
+{% extends 'base/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <div class="d-flex justify-content-center">
+    <div class="col-6">
+      <form method="POST" autocomplete="off">
+        {% csrf_token %}
+        {{ form | crispy }}
+        <div class="d-grid">
+          <button type="submit" class="d-grid btn" style="background-color: #f7b585;">Регистрация</button>
+        </div>
+        <p class="login_ref">Есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+      </form>
+    </div>
+  </div>
+{% endblock %}
