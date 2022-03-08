@@ -9,6 +9,7 @@ from main.forms import RegistrationForm
 def get_menu_context():
     return [
         {'url_name': 'index', 'name': 'Главная'},
+        {'url_name': 'assortment', 'name': 'Ассортимент'}
     ]
 
 
@@ -40,3 +41,11 @@ def profile_details_page(request, username):
         'pagename': f'Профиль {username}'
     }
     return render(request, 'pages/profile/details.html', context)
+
+
+def assortment(request):
+    context = {
+        'pagename': 'Ассортимент',
+        'menu': get_menu_context()
+    }
+    return render(request, 'pages/assortment.html', context)

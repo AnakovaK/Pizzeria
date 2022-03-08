@@ -40,5 +40,10 @@
    python manage.py migrate
    ```
 
-8. Создать конфигурацию запуска в PyCharm (файл `manage.py`, опция `runserver`)
+8. Создать суперпользователя
+   ```bash
+   python manage.py shell -c "from django.contrib.auth import get_user_model; get_user_model().objects.create_superuser('vasya', 'abc@123.net', 'pizzaproga')"
+   ```
+
+9. Создать конфигурацию запуска в PyCharm (файл `manage.py`, опция `runserver`)
 
