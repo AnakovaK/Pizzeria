@@ -56,3 +56,10 @@ def topsellers(request):
         'menu': get_menu_context()
     }
     return render(request, 'pages/topsellers.html', context)
+
+def checkout(request):
+    context = {
+        'pagename': 'Корзина',
+        'menu': get_menu_context()
+    }
+    return render(request, 'pages/checkout.html', context)
