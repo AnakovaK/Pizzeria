@@ -18,8 +18,13 @@
         </ul>
         <ul class="navbar-nav d-flex mb-md-0">
           <li class="nav-item">
+            <button class="btn" onclick="location.href='/checkout/'">
+              <img src="{% static 'img/shopping_cart.png' %}" alt="cart" style="max-width:35px;">
+            </button>
+          </li>
+          <li class="nav-item">
             <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions"
-                    aria-controls="offcanvasWithBothOptions" style="background-color: #f7b585;">
+                    aria-controls="offcanvasWithBothOptions">
               <img src="{% static 'img/phone.png' %}" alt="phone" style="max-width:35px;">
             </button>
           </li>
