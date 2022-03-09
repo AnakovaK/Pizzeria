@@ -49,3 +49,10 @@ def assortment(request):
         'menu': get_menu_context()
     }
     return render(request, 'pages/assortment.html', context)
+
+def topsellers(request):
+    context = {
+        'pagename': 'Хиты продаж',
+        'menu': get_menu_context()
+    }
+    return render(request, 'pages/topsellers.html', context)

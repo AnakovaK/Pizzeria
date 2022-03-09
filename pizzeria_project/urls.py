@@ -20,7 +20,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from main import views
-from main.views import index_page, assortment
+from main.views import index_page, assortment, topsellers
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -31,6 +31,7 @@ urlpatterns = [
         'pagename': 'Авторизация'
     })),
     path('assortment/', assortment, name="assortment"),
+    path('topsellers/', topsellers, name="top"),
 
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
@@ -39,4 +40,4 @@ urlpatterns = [
     path('accounts/registration/', views.RegistrationView.as_view(), name='registration'),
 
     path('profile/<str:username>/', views.profile_details_page, name='profile'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
