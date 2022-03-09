@@ -26,7 +26,7 @@
           С колбасой
         </label>
       </div>
-          <div class="form-check">
+      <div class="form-check">
         <input class="form-check-input" type="checkbox" value="" id="Vegetarian" style="background-color: #f7b585;">
         <label class="form-check-label" for="Vegetarian">
           Вегетарианская
@@ -34,6 +34,34 @@
       </div>
     </div>
   </div>
+  <br>
+  {% if request.user.is_staff %}
+  <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    + Добавить позицию
+  </button>
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Добавление позиции</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <ul>
+            <li>Название пиццы</li>
+            <li>Категория (курица/мясо и тд)</li>
+            <li>Цена </li>
+            <li>Рейтинг (изначально равен 0)</li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+          <button type="button" class="btn btn-primary">Сохранить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
   <div class="row row-cols-1 row-cols-md-3 g-4">
     <div class="col">
       <div class="card h-100">
@@ -128,3 +156,11 @@
   </div>
 </div>
 {% endblock%}
+{% block extra_js %}
+var myModal = document.getElementById('myModal')
+var myInput = document.getElementById('myInput')
+
+myModal.addEventListener('shown.bs.modal', function () {
+myInput.focus()
+})
+{% endblock %}
