@@ -30,3 +30,6 @@ class RegistrationForm(UserCreationForm):
             }
         )
     )
+
+
+#class PizzaCreationForm(forms.ModelForm):

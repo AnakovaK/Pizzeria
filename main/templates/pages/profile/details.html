@@ -8,6 +8,13 @@
     <div class="card-body d-flex">
       <div>
         <p style="font-size:300%;" class="card-text-center mb-0"><b>{{ user }}</b></p>
+        <p><b>Статус: </b>
+        {% if user.is_staff %}
+          Модератор
+          {% else %}
+          Покупатель
+          {% endif %}
+        </p>
         <p class="card-text-center">Зарегистрирован: {{ user.date_joined }}</p>
       </div>
       <div class="d-grid gap-2 ms-auto d-flex">
