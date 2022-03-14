@@ -20,7 +20,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from main import views
-from main.views import index_page, assortment, topsellers, checkout
+from main.views import index_page, assortment, topsellers, checkout, adding_of_position
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -33,6 +33,7 @@ urlpatterns = [
     path('assortment/', assortment, name="assortment"),
     path('topsellers/', topsellers, name="top"),
     path('checkout/', checkout, name="checkout"),
+    path('creating_position/', adding_of_position, name="creation"),
 
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
@@ -42,3 +43,5 @@ urlpatterns = [
 
     path('profile/<str:username>/', views.profile_details_page, name='profile'),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

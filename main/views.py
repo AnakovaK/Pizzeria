@@ -1,9 +1,12 @@
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import CreateView
 
-from main.forms import RegistrationForm
+from main.forms import RegistrationForm, PizzaCreationForm
+from main.models import Pizza
 
 
 def get_menu_context():
@@ -44,11 +47,16 @@ def profile_details_page(request, username):
 
 
 def assortment(request):
+    user = request.user
     context = {
         'pagename': 'Ассортимент',
-        'menu': get_menu_context()
+        'menu': get_menu_context(),
+        'user': user
     }
+    pizzas = Pizza.get_all()
+    context['pizzas'] = pizzas
     return render(request, 'pages/assortment.html', context)
+
 
 def topsellers(request):
     context = {
@@ -57,9 +65,34 @@ def topsellers(request):
     }
     return render(request, 'pages/topsellers.html', context)
 
+
 def checkout(request):
     context = {
         'pagename': 'Корзина',
         'menu': get_menu_context()
     }
     return render(request, 'pages/checkout.html', context)
+
+
+@staff_member_required
+def adding_of_position(request):
+    user = request.user
+    context = {
+        'pagename': 'Добавление позиции',
+        'menu': get_menu_context(),
+        'method': 'GET',
+        'form': PizzaCreationForm()
+    }
+    if request.method == 'POST':
+        pizza = Pizza(
+            author=user,
+            price=0,
+            rating=0
+        )
+        pizza.save()
+        form = PizzaCreationForm(request.POST, request.FILES, instance=pizza)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/assortment/')
+        context['form'] = form
+    return render(request, 'pages/creating_position.html', context)

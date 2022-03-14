@@ -1,4 +1,6 @@
 {% extends 'base/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="row mt-5">
@@ -34,136 +36,38 @@
       </div>
     </div>
   </div>
+</div>
+<div class="row mt-2">
   <br>
   {% if request.user.is_staff %}
-  <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    + Добавить позицию
-  </button>
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Добавление позиции</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <ul>
-            <li>Название пиццы</li>
-            <li>Фото</li>
-            <li>Описание</li>
-            <li>Категория (курица/мясо и тд)</li>
-            <li>Цена </li>
-            <li>Рейтинг (изначально равен 0)</li>
-            <li>Добавлено:</li>
-          </ul>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-          <button type="button" class="btn btn-primary">Сохранить</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <a href="{% url 'creation' %}" class="btn btn-danger">+ Добавить позицию</a>
   {% endif %}
-  <div class="row row-cols-1 row-cols-md-3 g-4">
-    <div class="col">
-      <div class="card h-100">
-        <img src="https://km-doma.ru/assets/gallery_thumbnails/31/319484a4bb725e4eacab62c7f0c7f1ed.jpg"
-             class="card-img-top" alt="Margarita">
-        <div class="card-body">
-          <h5 class="card-title">Маргарита</h5>
-          <p class="card-text">Пусть эта пицца будет НУ ОЧЕНЬ популярна. Но в ней однозначно нет курицы, говядины и
-            колбасы.</p>
-        </div>
-        <div class="card-footer">
-          <p><b>Цена:</b> 999 чебуреков</p>
-          <a href="#" class="btn btn-danger float-right">В корзину</a>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card h-100">
-        <img src="https://pizzabox.ru/upload/iblock/48d/pepperoni-s-khalapenyu_min.jpg" class="card-img-top"
-             alt="Pepperoni">
-        <div class="card-body">
-          <h5 class="card-title">Пепперони с халапеньо</h5>
-          <p class="card-text">А эту пиццу пусть никто не покупает - она не должна быть в хитах продаж. Но в ней есть
-            пепперони - колабаса, так что по фильтру пусть высвечивается!</p>
-        </div>
-        <div class="card-footer">
-          <p><b>Цена:</b> 799 чебуреков</p>
-          <a href="#" class="btn btn-danger float-right">В корзину</a>
+  <br>
+</div>
+<div class="row mt-4">
+  <div class="col">
+          {% if pizzas %}
+      {% for pizza in pizzas %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <div class="col">
+        <div class="card h-100">
+          <img src="{{ pizza.image.url }}" class="image card-img-top" alt="pizza">
+          <div class="card-body">
+            <h5 class="card-title">{{ pizza.name }}</h5>
+            <p class="card-text"> {{ pizza.description }} </p>
+          </div>
+          <div class="card-footer">
+            <p><b>Цена:</b> {{ pizza.price }}</p>
+            <a href="#" class="btn btn-danger float-right">В корзину</a>
+          </div>
         </div>
       </div>
+
     </div>
-    <div class="col">
-      <div class="card h-100">
-        <img src="http://pizzarini.info/wp-content/uploads/2020/02/3067.jpg" class="card-img-top" alt="Myasnaya">
-        <div class="card-body">
-          <h5 class="card-title">Мясная</h5>
-          <p class="card-text">В ней содержится и курица, и мясо. Будет проходить по этим двум фильтрам. О популярности
-            пока не говорим.</p>
-        </div>
-        <div class="card-footer">
-          <p><b>Цена:</b> 799 чебуреков</p>
-          <a href="#" class="btn btn-danger float-right">В корзину</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row row-cols-1 row-cols-md-3 g-4">
-    <div class="col">
-      <div class="card h-100">
-        <img
-          src="https://cdn.shortpixel.ai/client/to_webp,q_lossless,ret_img/https://cookery.site/wp-content/uploads/2019/09/photo_92647025-1-678x381.jpg"
-          class="card-img-top" alt="AssortedPizza">
-        <div class="card-body">
-          <h5 class="card-title">Ассорти</h5>
-          <p class="card-text">Самый популярный выбор - но она будет не в самом начале списка. Почему? Да для того,
-            чтобы проверить хиты продаж - пусть по этому фильтру она должна будет высвечиваться первой. А еще в ней есть
-            все: и курица, и говядина, и колбаса.</p>
-        </div>
-        <div class="card-footer">
-          <p><b>Цена:</b> 1299 чебуреков</p>
-          <a href="#" class="btn btn-danger float-right">В корзину</a>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card h-100">
-        <img src="https://kulinarnia.ru/wp-content/uploads/2016/01/pitstsa-gavayskaya-s-ananasami-recept.jpg"
-             class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Гавайская</h5>
-          <p class="card-text">Да, она с курицей. Там не только ананасы... И пусть из-за предрассудков люди не будут
-            покупать эту пиццу - она будет последняя в топе хитов продаж.</p>
-        </div>
-        <div class="card-footer">
-          <p><b>Цена:</b> 799 чебуреков</p>
-          <a href="#" class="btn btn-danger float-right">В корзину</a></div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card h-100">
-        <img src="https://sushicity.su/images/stories/virtuemart/product/05derevnya.jpg" class="card-img-top"
-             alt="Homemade">
-        <div class="card-body">
-          <h5 class="card-title">Деревенская</h5>
-          <p class="card-text">Ну, она просто есть. Твердый среднячок с курицей и колбасой.</p>
-        </div>
-        <div class="card-footer">
-          <p><b>Цена:</b> 799 чебуреков</p>
-          <a href="#" class="btn btn-danger float-right">В корзину</a></div>
-      </div>
-    </div>
+          {% endfor %}
+      {% else %}
+      <h2>На данный момент страница с ассортиментом не оформлена. Просим прощения за неудобства!</h2>
+      {% endif %}
   </div>
 </div>
 {% endblock%}
-{% block extra_js %}
-var myModal = document.getElementById('myModal')
-var myInput = document.getElementById('myInput')
-
-myModal.addEventListener('shown.bs.modal', function () {
-myInput.focus()
-})
-{% endblock %}
