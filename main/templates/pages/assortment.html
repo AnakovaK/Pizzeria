@@ -46,9 +46,9 @@
 </div>
 <div class="row mt-4">
   <div class="col">
-          {% if pizzas %}
-      {% for pizza in pizzas %}
+    {% if pizzas %}
     <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for pizza in pizzas %}
       <div class="col">
         <div class="card h-100">
           <img src="{{ pizza.image.url }}" class="image card-img-top" alt="pizza">
@@ -62,12 +62,11 @@
           </div>
         </div>
       </div>
-
+      {% endfor %}
     </div>
-          {% endfor %}
-      {% else %}
-      <h2>На данный момент страница с ассортиментом не оформлена. Просим прощения за неудобства!</h2>
-      {% endif %}
+    {% else %}
+    <h2>На данный момент страница с ассортиментом не оформлена. Просим прощения за неудобства!</h2>
+    {% endif %}
   </div>
 </div>
 {% endblock%}

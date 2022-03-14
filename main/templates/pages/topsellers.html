@@ -1,9 +1,29 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-
-{% if request.user.is_staff %}
-<p>Hello world, im staff!!</p>
-{% endif %}
-
+<div class="row mt-4">
+  <div class="col">
+    {% if pizzas %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for pizza in pizzas %}
+      <div class="col">
+        <div class="card h-100">
+          <img src="{{ pizza.image.url }}" class="image card-img-top" alt="pizza">
+          <div class="card-body">
+            <h5 class="card-title">{{ pizza.name }}</h5>
+            <p class="card-text"> {{ pizza.description }} </p>
+          </div>
+          <div class="card-footer">
+            <p><b>Цена:</b> {{ pizza.price }}</p>
+            <a href="#" class="btn btn-danger float-right">В корзину</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <h2>На данный момент страница с хитами продаж не оформлена. Просим прощения за неудобства!</h2>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

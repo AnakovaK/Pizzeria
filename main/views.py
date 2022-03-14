@@ -63,6 +63,8 @@ def topsellers(request):
         'pagename': 'Хиты продаж',
         'menu': get_menu_context()
     }
+    pizzas = Pizza.objects.order_by('-rating')
+    context['pizzas'] = pizzas
     return render(request, 'pages/topsellers.html', context)
 
 
