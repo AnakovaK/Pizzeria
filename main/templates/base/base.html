@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="ru" class="h-100">
 
 <head>
@@ -9,6 +10,27 @@
 
   <link href="https://getbootstrap.com/docs/5.1/examples/sticky-footer-navbar/sticky-footer-navbar.css"
         rel="stylesheet">
+
+  <script type="text/javascript">
+    var user = '{{request.user}}'
+    function getToken(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+  const csrftoken = getToken('csrftoken');
+
+  </script>
   {% block extra_css %} {% endblock %}
 </head>
 
@@ -39,6 +61,9 @@
 <script src="https://getbootstrap.com/docs/5.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+
 {% block extra_js %} {% endblock %}
 </body>
 </html>

@@ -1,12 +1,18 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import CreateView
+import json
 
 from main.forms import RegistrationForm, PizzaCreationForm
-from main.models import Pizza
+from main.models import Pizza, Order, OrderItem
+
+
+def get_base_context(request, pagename):
+    context = {'menu': get_menu_context(), 'pagename': pagename, 'notifications': 1}
+    return context
 
 
 def get_menu_context():
@@ -17,10 +23,7 @@ def get_menu_context():
 
 
 def index_page(request):
-    context = {
-        'pagename': 'Silver Pizza',
-        'menu': get_menu_context()
-    }
+    context = get_base_context(request, 'Silver Pizza')
     return render(request, 'pages/index.html', context)
 
 
@@ -38,53 +41,45 @@ class RegistrationView(CreateView):
 
 @login_required
 def profile_details_page(request, username):
-    context = {
-        'menu': get_menu_context(),
-        'user': get_object_or_404(User, username=username),
-        'pagename': f'Профиль {username}'
-    }
+    context = get_base_context(request,  f'Профиль {username}')
+    context['user'] = get_object_or_404(User, username=username)
     return render(request, 'pages/profile/details.html', context)
 
 
 def assortment(request):
     user = request.user
-    context = {
-        'pagename': 'Ассортимент',
-        'menu': get_menu_context(),
-        'user': user
-    }
+    context = get_base_context(request, 'Ассортимент')
+    context['user'] = user
     pizzas = Pizza.get_all()
     context['pizzas'] = pizzas
     return render(request, 'pages/assortment.html', context)
 
 
 def topsellers(request):
-    context = {
-        'pagename': 'Хиты продаж',
-        'menu': get_menu_context()
-    }
+    context = get_base_context(request, 'Хиты продаж')
     pizzas = Pizza.objects.order_by('-rating')
     context['pizzas'] = pizzas
     return render(request, 'pages/topsellers.html', context)
 
 
 def checkout(request):
-    context = {
-        'pagename': 'Корзина',
-        'menu': get_menu_context()
-    }
+    context = get_base_context(request, 'Корзина')
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+    else:
+        items = []
+    context['items'] = items
     return render(request, 'pages/checkout.html', context)
 
 
 @staff_member_required
 def adding_of_position(request):
+    context = get_base_context(request, 'Добавление позиции')
     user = request.user
-    context = {
-        'pagename': 'Добавление позиции',
-        'menu': get_menu_context(),
-        'method': 'GET',
-        'form': PizzaCreationForm()
-    }
+    context['method'] = 'GET'
+    context['form'] = PizzaCreationForm()
     if request.method == 'POST':
         pizza = Pizza(
             author=user,
@@ -98,3 +93,27 @@ def adding_of_position(request):
             return HttpResponseRedirect('/assortment/')
         context['form'] = form
     return render(request, 'pages/creating_position.html', context)
+
+
+def update_item(request):
+    data = json.loads(request.body)
+    pizzaId = data['pizzaId']
+    action = data['action']
+
+    customer = request.user.customer
+    pizza = Pizza.objects.get(id=pizzaId)
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    orderItem, created = OrderItem.objects.get_or_create(order=order, pizza=pizza)
+
+    if action == 'add':
+        orderItem.quantity = (orderItem.quantity + 1)
+    elif action == 'remove':
+        orderItem.quantity = (orderItem.quantity - 1)
+
+    orderItem.save()
+
+    if orderItem.quantity <= 0:
+        orderItem.delete()
+    print('Action:', action)
+    print('pizzaId:', pizzaId)
+    return JsonResponse('Item Was Added', safe=False)

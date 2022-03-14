@@ -3,5 +3,21 @@
 {% block content %}
 
 
+<div class="row mt-5">
+  {% if items %}
+  <div class="col">
+    {% for item in items %}
+    <div>
+      <p>{{ item.pizza.name }}</p>
+      <p>{{ item.pizza.price }}</p>
+      <p>{{ item.pizza.quantity }}</p>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <h2>Пока вы ничего не добавили :(</h2>
+{% endif %}
+</div>
+
 
 {% endblock %}

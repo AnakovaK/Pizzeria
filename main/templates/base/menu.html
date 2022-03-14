@@ -19,6 +19,11 @@
         <ul class="navbar-nav d-flex mb-md-0">
           <li class="nav-item">
             <button class="btn" onclick="location.href='/checkout/'">
+              {% if notifications %}
+               <span class = "position-absolute top-1 mt-4 translate-middle badge rounded-pill bg-danger">
+                {{ notifications }}
+              </span>
+              {% endif %}
               <img src="{% static 'img/shopping_cart.png' %}" alt="cart" style="max-width:35px;">
             </button>
           </li>
