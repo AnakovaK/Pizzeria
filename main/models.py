@@ -28,6 +28,14 @@ class Pizza(models.Model):
     def get_all():
         return Pizza.objects.all()
 
+    @property
+    def imageURL(self):
+        try:
+            url = self.image.url
+        except:
+            url = ''
+        return url
+
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)

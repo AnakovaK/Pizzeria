@@ -8,6 +8,7 @@ import json
 
 from main.forms import RegistrationForm, PizzaCreationForm
 from main.models import Pizza, Order, OrderItem
+from main.utils import cookieCart
 
 
 def get_base_context(request, pagename):
@@ -27,6 +28,19 @@ def get_menu_context():
 
 def index_page(request):
     context = get_base_context(request, 'Silver Pizza')
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+        notifications = order.get_cart_items
+    else:
+        cookieData = cookieCart(request)
+        notifications = cookieData['notifications']
+        order = cookieData['order']
+        items = cookieData['items']
+    context['notifications'] = notifications
+    context['items'] = items
+    context['order'] = order
     return render(request, 'pages/index.html', context)
 
 
@@ -44,7 +58,7 @@ class RegistrationView(CreateView):
 
 @login_required
 def profile_details_page(request, username):
-    context = get_base_context(request,  f'Профиль {username}')
+    context = get_base_context(request, f'Профиль {username}')
     context['user'] = get_object_or_404(User, username=username)
     return render(request, 'pages/profile/details.html', context)
 
@@ -53,7 +67,21 @@ def assortment(request):
     user = request.user
     context = get_base_context(request, 'Ассортимент')
     context['user'] = user
+
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+        notifications = order.get_cart_items
+    else:
+        cookieData = cookieCart(request)
+        notifications = cookieData['notifications']
+        order = cookieData['order']
+        items = cookieData['items']
     pizzas = Pizza.get_all()
+    context['notifications'] = notifications
+    context['items'] = items
+    context['order'] = order
     context['pizzas'] = pizzas
     return render(request, 'pages/assortment.html', context)
 
@@ -73,8 +101,11 @@ def checkout(request):
         context['notifications'] = order.get_cart_items
         items = order.orderitem_set.all()
     else:
-        order = {'get_cart_total': 0, 'get_cart_items':0, 'get_bonus_points':0 }
-        items = []
+        cookieData = cookieCart(request)
+        notifications = cookieData['notifications']
+        order = cookieData['order']
+        items = cookieData['items']
+        context['notifications'] = notifications
     context['items'] = items
     context['order'] = order
     return render(request, 'pages/checkout.html', context)

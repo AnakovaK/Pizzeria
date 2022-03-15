@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 
+{% load static %}
 {% block content %}
 
 
@@ -12,16 +13,20 @@
       <th scope="col">Наименование</th>
       <th scope="col">Цена</th>
       <th scope="col">Количество</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
       <th scope="col">Итого за позицию</th>
     </tr>
     </thead>
     <tbody>
     {% for item in items %}
     <tr>
-      <td><img src="{{item.pizza.image.url}}" style="max-width:100px;"></td>
+      <td><img src="{{item.pizza.imageURL}}" style="max-height:70px;"></td>
       <td>{{ item.pizza.name }}</td>
       <td>{{ item.pizza.price }}</td>
       <td>{{ item.quantity }}</td>
+      <td><img data-pizza="{{item.pizza.id}}" data-action="add" class="update-cart" src="{% static 'img/shopping_cart_adding.png'%}" style="max-height:50px;"></td>
+      <td><img data-pizza="{{item.pizza.id}}" data-action="remove" class="update-cart" src="{% static 'img/shopping_cart_deleting.png'%}" style="max-height:50px;"></td>
       <td>{{ item.get_total }} ₽</td>
     </tr>
     {% endfor %}
