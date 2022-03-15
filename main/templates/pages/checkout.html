@@ -5,18 +5,41 @@
 
 <div class="row mt-5">
   {% if items %}
-  <div class="col">
+  <table class="table caption-top">
+    <thead>
+    <tr>
+      <th scope="col">Изображение</th>
+      <th scope="col">Наименование</th>
+      <th scope="col">Цена</th>
+      <th scope="col">Количество</th>
+      <th scope="col">Итого за позицию</th>
+    </tr>
+    </thead>
+    <tbody>
     {% for item in items %}
-    <div>
-      <p>{{ item.pizza.name }}</p>
-      <p>{{ item.pizza.price }}</p>
-      <p>{{ item.pizza.quantity }}</p>
-    </div>
+    <tr>
+      <td><img src="{{item.pizza.image.url}}" style="max-width:100px;"></td>
+      <td>{{ item.pizza.name }}</td>
+      <td>{{ item.pizza.price }}</td>
+      <td>{{ item.quantity }}</td>
+      <td>{{ item.get_total }} ₽</td>
+    </tr>
     {% endfor %}
+    </tbody>
+  </table>
+  <div class="col"><h3>Позиций: {{ order.get_cart_items }}</h3></div>
+  <div class="col"><h2 style="text-align:right;">Итого: {{ order.get_cart_total}} ₽</h2></div>
+
+  <p style="background-color: #f7b585;">Бонусные очки, которые будут зачислены за эту покупку: {{order.get_bonus_points}}</p>
+  <div class="col">
+    <div><a href="#"  class="btn btn-danger">Оформить заказ</a></div>
   </div>
   {% else %}
   <h2>Пока вы ничего не добавили :(</h2>
-{% endif %}
+  {% endif %}
+  <div class = "col">
+    <div class=><a href="{% url 'assortment'%}"  class="btn" style="background-color: #f7b585;">Вернутся к покупкам</a></div>
+  </div>
 </div>
 
 
