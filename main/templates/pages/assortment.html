@@ -10,30 +10,36 @@
       <h5 class="card-title">Выбирайте то, что Вам по вкусу!</h5>
       <a href="{% url 'top' %}" class="btn btn-danger">Хиты продаж</a>
       <br><br>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="WithChicken" style="background-color: #f7b585;">
-        <label class="form-check-label" for="WithChicken">
-          С курицей
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="WithBeef" style="background-color: #f7b585;">
-        <label class="form-check-label" for="WithBeef">
-          С говядиной
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="WithSausage" style="background-color: #f7b585;">
-        <label class="form-check-label" for="WithSausage">
-          С колбасой
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="Vegetarian" style="background-color: #f7b585;">
-        <label class="form-check-label" for="Vegetarian">
-          Вегетарианская
-        </label>
-      </div>
+      <form action = "" method="POST">
+        {% csrf_token %}
+        <div class="form-check">
+          <input class="form-check-input" type="radio" id="chicken" value="chicken" name="list_of_types" style="background-color: #f7b585;">
+          <label class="form-check-label" for="chicken">
+            С курицей
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" id="beef" value="beef" name="list_of_types" style="background-color: #f7b585;">
+          <label class="form-check-label" for="beef">
+            С говядиной
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" id="sausage" value="sausage" name="list_of_types" style="background-color: #f7b585;">
+          <label class="form-check-label" for="sausage">
+            С колбасой
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" id="vegetarian" value="vegetarian" name="list_of_types" style="background-color: #f7b585;">
+          <label class="form-check-label" for="vegetarian">
+            Вегетарианская
+          </label>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-danger">Отфильтровать</button>
+        <button type="submit" class="btn btn-danger">Сбросить фильтрацию</button>
+    </form>
     </div>
   </div>
 </div>
@@ -43,6 +49,14 @@
   <a href="{% url 'creation' %}" class="btn btn-danger">+ Добавить позицию</a>
   {% endif %}
   <br>
+</div>
+<br>
+<div>
+{% if active_filter %}
+<h2>Ваши активные фильтры: {{active_filter}} </h2>
+{% else %}
+<h2>Вся пицца сейчас показана без фильтров</h2>
+{% endif %}
 </div>
 <div class="row mt-4">
   <div class="col">
@@ -58,7 +72,9 @@
           </div>
           <div class="card-footer">
             <p><b>Цена:</b> {{ pizza.price }}</p>
-            <button class="btn btn-danger add-btn float-right update-cart" data-pizza={{pizza.id}} data-action="add">В корзину</button>
+            <button class="btn btn-danger add-btn float-right update-cart" data-pizza={{pizza.id}} data-action="add">В
+              корзину
+            </button>
           </div>
         </div>
       </div>

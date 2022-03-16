@@ -67,7 +67,22 @@ def assortment(request):
     user = request.user
     context = get_base_context(request, 'Ассортимент')
     context['user'] = user
-
+    pizzas = Pizza.get_all()
+    active_filter = ''
+    if request.method == 'POST':
+        selected = request.POST.getlist('list_of_types')
+        if selected == ['chicken']:
+            pizzas = Pizza.get_all().filter(type=0)
+            active_filter = 'с курицей'
+        if selected == ['beef']:
+            pizzas = Pizza.get_all().filter(type=1)
+            active_filter = 'с говядиной'
+        if selected == ['sausage']:
+            pizzas = Pizza.get_all().filter(type=2)
+            active_filter = 'с колбасой'
+        if selected == ['vegetarian']:
+            pizzas = Pizza.get_all().filter(type=3)
+            active_filter = 'вегетарианская'
     if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
@@ -78,11 +93,11 @@ def assortment(request):
         notifications = cookieData['notifications']
         order = cookieData['order']
         items = cookieData['items']
-    pizzas = Pizza.get_all()
     context['notifications'] = notifications
     context['items'] = items
     context['order'] = order
     context['pizzas'] = pizzas
+    context['active_filter'] = active_filter
     return render(request, 'pages/assortment.html', context)
 
 
