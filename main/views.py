@@ -60,7 +60,13 @@ class RegistrationView(CreateView):
 @login_required
 def profile_details_page(request, username):
     context = get_base_context(request, f'Профиль {username}')
+    context['points'] = request.user.customer.bonus_points
     context['user'] = get_object_or_404(User, username=username)
+    customer = request.user.customer
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    notifications = order.get_cart_items
+    context['order'] = order
+    context['notifications'] = notifications
     return render(request, 'pages/profile/details.html', context)
 
 
@@ -138,6 +144,9 @@ def checkout(request):
             form = CheckoutForm(request.POST, request.FILES, instance=address)
             if form.is_valid():
                 form.save()
+                order = Order.objects.create()
+                customer.bonus_points += order.get_bonus_points
+                customer.save()
                 return redirect("/payment/")
     else:
         context['form'] = CheckoutForm()
