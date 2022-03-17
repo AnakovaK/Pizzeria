@@ -5,6 +5,9 @@ from main.models import Pizza, OrderData
 
 
 class RegistrationForm(UserCreationForm):
+    """
+    Расширенная форма регистрации пользователя.
+    """
     username = forms.CharField(
         label='Логин ',
         widget=forms.TextInput(
@@ -35,6 +38,9 @@ class RegistrationForm(UserCreationForm):
 
 
 class PizzaCreationForm(forms.ModelForm):
+    """
+    Форма добавления пиццы в ассортимент.
+    """
     class Meta:
         model = Pizza
         fields = ('name', 'description', 'type', 'price', 'rating', 'image')
@@ -47,6 +53,9 @@ class PizzaCreationForm(forms.ModelForm):
 
 
 class CheckoutForm(forms.ModelForm):
+    """
+    Форма добавления информации о пользователе (телефон и адрес) в базу данных.
+    """
     class Meta:
         model = OrderData
         fields = ('phone', 'address')
