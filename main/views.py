@@ -104,7 +104,21 @@ def assortment(request):
 def topsellers(request):
     context = get_base_context(request, 'Хиты продаж')
     pizzas = Pizza.objects.order_by('-rating')
+
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+        notifications = order.get_cart_items
+    else:
+        cookieData = cookieCart(request)
+        notifications = cookieData['notifications']
+        order = cookieData['order']
+        items = cookieData['items']
+    context['notifications'] = notifications
     context['pizzas'] = pizzas
+    context['items'] = items
+    context['order'] = order
     return render(request, 'pages/topsellers.html', context)
 
 
