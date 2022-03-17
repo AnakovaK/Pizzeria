@@ -42,6 +42,7 @@ class Pizza(models.Model):
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=255, null=True)
+    bonus_points = models.IntegerField(default=0, blank=True)
 
     def __str__(self):
         return self.name
@@ -91,3 +92,8 @@ class OrderItem(models.Model):
     def get_total(self):
         total = self.pizza.price * self.quantity
         return total
+
+
+class OrderData(models.Model):
+    address = models.TextField()
+    phone = models.TextField()

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from main.models import Pizza
+from main.models import Pizza, OrderData
 
 
 class RegistrationForm(UserCreationForm):
@@ -44,3 +44,27 @@ class PizzaCreationForm(forms.ModelForm):
     price = forms.IntegerField(label='Цена', min_value=0)
     rating = forms.IntegerField(label='Рейтинг', min_value=0)
     image = forms.ImageField(label='Изображение')
+
+
+class CheckoutForm(forms.ModelForm):
+    class Meta:
+        model = OrderData
+        fields = ('phone', 'address')
+    phone = forms.CharField(
+        label='Номер телефона',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-input',
+                'placeholder': '+7(xxx)xxx-xx-xx'
+            }
+        )
+    )
+    address = forms.CharField(
+        label='Адрес доставки',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-input',
+                'placeholder': 'Город Х, район У, улица Z, дом ХХХ, корпус ХХ, квартира Х'
+            }
+        )
+    )

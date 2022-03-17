@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -6,8 +7,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import CreateView
 import json
 
-from main.forms import RegistrationForm, PizzaCreationForm
-from main.models import Pizza, Order, OrderItem
+from main.forms import RegistrationForm, PizzaCreationForm, CheckoutForm
+from main.models import Pizza, Order, OrderItem, OrderData
 from main.utils import cookieCart
 
 
@@ -59,7 +60,13 @@ class RegistrationView(CreateView):
 @login_required
 def profile_details_page(request, username):
     context = get_base_context(request, f'Профиль {username}')
+    context['points'] = request.user.customer.bonus_points
     context['user'] = get_object_or_404(User, username=username)
+    customer = request.user.customer
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    notifications = order.get_cart_items
+    context['order'] = order
+    context['notifications'] = notifications
     return render(request, 'pages/profile/details.html', context)
 
 
@@ -124,12 +131,32 @@ def topsellers(request):
 
 def checkout(request):
     context = get_base_context(request, 'Корзина')
+    context['method'] = 'GET'
     if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         context['notifications'] = order.get_cart_items
         items = order.orderitem_set.all()
+        context['form'] = CheckoutForm()
+        if request.method == 'POST':
+            address = OrderData()
+            address.save()
+            form = CheckoutForm(request.POST, request.FILES, instance=address)
+            if form.is_valid():
+                form.save()
+                order = Order.objects.create()
+                customer.bonus_points += order.get_bonus_points
+                customer.save()
+                return redirect("/payment/")
     else:
+        context['form'] = CheckoutForm()
+        if request.method == 'POST':
+            address = OrderData()
+            address.save()
+            form = CheckoutForm(request.POST, request.FILES, instance=address)
+            if form.is_valid():
+                form.save()
+                return redirect("/payment/")
         cookieData = cookieCart(request)
         notifications = cookieData['notifications']
         order = cookieData['order']
@@ -183,3 +210,21 @@ def update_item(request):
     print('Action:', action)
     print('pizzaId:', pizzaId)
     return JsonResponse('Item Was Added', safe=False)
+
+
+def payment(request):
+    context = get_base_context(request, 'Оплата')
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+        notifications = order.get_cart_items
+    else:
+        cookieData = cookieCart(request)
+        notifications = cookieData['notifications']
+        order = cookieData['order']
+        items = cookieData['items']
+    context['notifications'] = notifications
+    context['items'] = items
+    context['order'] = order
+    return render(request, 'pages/payment.html', context)
