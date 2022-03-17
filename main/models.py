@@ -91,3 +91,8 @@ class OrderItem(models.Model):
     def get_total(self):
         total = self.pizza.price * self.quantity
         return total
+
+
+class OrderData(models.Model):
+    address = models.TextField()
+    phone = models.TextField()

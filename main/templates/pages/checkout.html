@@ -1,9 +1,9 @@
 {% extends 'base/base.html' %}
 
 {% load static %}
+{% load crispy_forms_tags %}
+
 {% block content %}
-
-
 <div class="row mt-5">
   <table class="table caption-top">
     <thead>
@@ -35,93 +35,39 @@
   </table>
   <div class="col"><h3>Позиций: {{ order.get_cart_items }}</h3></div>
   <div class="col"><h2 style="text-align:right;">Итого: {{ order.get_cart_total}} ₽</h2></div>
-
-  {% if not user.is_authenticated %}
-  <p style="background-color: #f7b585;">Зарегистрируйтесь, чтобы получать бонусные очки за покупки </p>
-  <div class="col">
-    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-      Оформить заказ
-    </button>
-  </div>
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Оформление заказа</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form class="row g-3">
-            <div class="col-md-6">
-              <label for="inputPhone" class="form-label">Телефон</label>
-              <input type="text" class="form-control" id="inputPhone">
-            </div>
-            <div class="col-12">
-              <label for="inputAddress" class="form-label">Адрес</label>
-              <input type="text" class="form-control" id="inputAddress" placeholder="Город Х, улица У, дом ххх, квартира ууу">
-            </div>
-          </form>
-          <br>
-          <div class="col-mr-6">
-            <h2 style="text-align:right;">Итого: {{ order.get_cart_total}} ₽</h2>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-          <button type="button" class="btn btn-primary">Продолжить</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  {% else %}
+  {% if user.is_authenticated %}
   <p style="background-color: #f7b585;">Бонусные очки, которые будут зачислены за эту покупку:
     {{order.get_bonus_points}}</p>
   <div class="col">
-    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal2">
-      Оформить заказ
-    </button>
-  </div>
-  <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="ModalLabel2">Оформление заказа</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form class="row g-3">
-            <div class="col-md-6">
-              <label for="inputPhone2" class="form-label">Карта</label>
-              <input type="password" class="form-control" id="inputPhone2">
-            </div>
-          </form>
-          <br>
-          <div class="col-mr-6">
-            <h2 style="text-align:right;">Итого: {{ order.get_cart_total}} ₽</h2>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-          <button type="button" class="btn btn-primary">Продолжить</button>
-        </div>
-      </div>
+    <div class="card card-body">
+      <form method="POST" action="{% url 'checkout' %}">
+        {% csrf_token %}
+        {{ form | crispy }}
+        <input type="submit" class="btn btn-danger mt-3" name="Submit" value="Оплатить">
+      </form>
     </div>
   </div>
-  {% endif %}
   <div class="col">
     <div class=><a href="{% url 'assortment'%}" class="btn" style="background-color: #f7b585;">Вернутся к покупкам</a>
     </div>
   </div>
+  {% else %}
+  <p style="background-color: #f7b585;">Зарегистрируйтесь, чтобы получать бонусные очки за покупки </p>
+  <div class="col">
+    <div class="card card-body">
+      <form method="POST" action="{% url 'checkout' %}">
+        {% csrf_token %}
+        {{ form | crispy }}
+        <input type="submit" class="btn btn-danger mt-3" name="Submit" value="Оплатить">
+      </form>
+    </div>
+  </div>
+  <div class="col">
+    <div class=><a href="{% url 'assortment'%}" class="btn" style="background-color: #f7b585;">Вернутся к покупкам</a>
+    </div>
+  </div>
+  {% endif %}
 </div>
 
 
-{% endblock %}
-
-{% block extra_js %}
-var myModal = document.getElementById('myModal')
-var myInput = document.getElementById('myInput')
-
-myModal.addEventListener('shown.bs.modal', function () {
-myInput.focus()
-})
 {% endblock %}

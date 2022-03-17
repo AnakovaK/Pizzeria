@@ -6,7 +6,6 @@ def cookieCart(request):
         cart = json.loads(request.COOKIES['cart'])
     except:
         cart = {}
-    print('Cart:', cart)
     items = []
     order = {'get_cart_total': 0, 'get_cart_items': 0, 'get_bonus_points': 0}
     notifications = order['get_cart_items']

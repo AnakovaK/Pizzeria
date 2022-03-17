@@ -20,7 +20,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from main import views
-from main.views import index_page, assortment, topsellers, checkout, adding_of_position, update_item
+from main.views import index_page, assortment, topsellers, checkout, adding_of_position, update_item, payment
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -35,6 +35,7 @@ urlpatterns = [
     path('checkout/', checkout, name="checkout"),
     path('creating_position/', adding_of_position, name="creation"),
     path('update_item/', update_item, name="update_item"),
+    path('payment/', payment, name="payment"),
 
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
