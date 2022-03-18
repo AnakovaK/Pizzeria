@@ -164,7 +164,6 @@ def checkout(request):
             form = CheckoutForm(request.POST, request.FILES, instance=address)
             if form.is_valid():
                 form.save()
-                order = Order.objects.create()
                 customer.bonus_points += order.get_bonus_points
                 customer.save()
                 return redirect("/payment/")
